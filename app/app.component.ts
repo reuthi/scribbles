@@ -6,7 +6,7 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import {MonsterService} from './monster/monster.service';
 import {ChatRoomService} from './chat/chat-room.service';
 
-// import * as io from 'socket.io-client';
+import * as io from 'socket.io-client';
 
 
 @Component({
@@ -15,7 +15,7 @@ import {ChatRoomService} from './chat/chat-room.service';
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
   encapsulation: ViewEncapsulation.None,
-  providers: [MonsterService, ChatRoomService, ToastsManager]
-// {provide: 'io', useValue: io}
+  providers: [MonsterService, ChatRoomService, ToastsManager, {provide: 'io', useValue: io}]
+
 })
 export class AppComponent { }

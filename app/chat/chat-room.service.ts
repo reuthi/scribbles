@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import {Observable, Subject} from 'rxjs/Rx';
-//import * as io from 'socket.io-client';
+import * as io from 'socket.io-client';
 
 @Injectable()
 export class ChatRoomService{
@@ -18,6 +18,7 @@ export class ChatRoomService{
       
     this.messages$ = this.socket$
         .switchMap(socket => Observable.fromEvent(socket, 'chat message'))
+        // .do((ev)=>console.log('Got Msg:',  ev) )
         .startWith([])
         .scan((acc, curr)=> [...acc, curr]);
     
@@ -32,11 +33,12 @@ export class ChatRoomService{
       disconnect$.mapTo(false)
     );
     
-    // this.send$.withLatestFrom(this.socket$, (message, socket: SocketIOClient.Socket)=>{
-    //   return {message, socket};
-    // })
-    // .subscribe(({message, socket})=>{
-    //   socket.emit('chat message', message);
-    // })
+    this.send$.withLatestFrom(this.socket$, (message, socket: SocketIOClient.Socket)=>{
+      return {message, socket};
+    })
+    .subscribe(({message, socket})=>{
+      // console.log('Emitting msg: ', message);
+      socket.emit('chat message', message);
+    })
   }
 }
