@@ -74,7 +74,17 @@ nspTTT.on('connection', function (socket) {
 	});
 
 	socket.on('chat message', function (msg) {
+		//**on a chatmsg event, the namespace emits the response only
+		// to the specified room (socket.roomId - an arbitrary property we invented)
 		nspTTT.to(socket.roomId).emit('chat message', msg);
+	});
+
+	socket.on('move', (cell) => {
+		if(cell.entity !== 'X' || cell.entity !== 'O' ) {
+		if(this.currentPlayer) cell.entity = 'X';
+		else cell.entity = 'O';
+		}
+		
 	});
 
 });

@@ -11,7 +11,7 @@ export class ArenaService {
   public connected = false;
 
   constructor(@Inject('io') io){
-    console.log('Arena Service ctor');
+    // console.log('Arena Service ctor');
     
     this.socket = io.connect(this.url);
     this.socket.on('ttt join', (msg)=>{

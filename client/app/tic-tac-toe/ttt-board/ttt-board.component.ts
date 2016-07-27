@@ -25,20 +25,22 @@ export class BoardComponent implements OnInit {
         this.row = this.tttService.row;
     }
 
-    play(cell) {
+    play(cell: CellModel) {
         
         const x = cell.rowNum;
         const y = cell.colNum;
         console.log('cell', cell)
         
-        if(cell.entity !== 'X' || cell.entity !== 'O' ) {
-            if(this.currentPlayer) cell.entity = 'X';
-            else cell.entity = 'O';
+        // if(cell.entity !== 'X' || cell.entity !== 'O' ) {
+        //     if(this.currentPlayer) cell.entity = 'X';
+        //     else cell.entity = 'O';
+
+        this.tttService.socket.emit('move', cell)
 
         this.win = this.tttService.checkGame(this.board, cell);
         if(this.win) alert ('game over!')
         this.currentPlayer = !this.currentPlayer;
-    }
+        // }
         
     }
 }
