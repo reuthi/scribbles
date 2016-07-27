@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-// import { ToastsManager } from 'ng2-toastr/ng2-toastr';
+import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
 
 import {MonsterService} from './monster/monster.service';
@@ -17,7 +17,10 @@ import * as io from 'socket.io-client';
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
   encapsulation: ViewEncapsulation.None,
-  providers: [MonsterService, ChatRoomService, ArenaService, {provide: 'io', useValue: io}]
+
+
+  providers: [MonsterService, ChatRoomService, ArenaService, ToastsManager, {provide: 'io', useValue: io}]
+
 
 })
 export class AppComponent { }

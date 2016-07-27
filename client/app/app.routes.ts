@@ -5,9 +5,11 @@ import {MonsterComponent} from './monster/monster.component';
 import {MonsterEditComponent} from './monster/monster-edit.component';
 import {ChatRoomComponent} from './chat/chat-room.component';
 
+
 import {TicTacToeComponent} from './tic-tac-toe/ttt/ttt.component';
 
 import {ArenaComponent} from './arena/arena.component';
+
 
 import { RouterConfig, ROUTER_DIRECTIVES, provideRouter } from '@angular/router';
 
@@ -20,6 +22,7 @@ const routes: RouterConfig = [
   { path: 'chat', component: ChatRoomComponent },
   { path: 'tic-tac-toe', component: TicTacToeComponent },
   { path: 'arena', component: ArenaComponent },
+
   
 ];
 
