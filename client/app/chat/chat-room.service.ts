@@ -5,7 +5,7 @@ import * as io from 'socket.io-client';
 @Injectable()
 export class ChatRoomService{
   // url$ = Observable.of('https://socket-chat-example-qsaokhakmv.now.sh/');
-  url$ = Observable.of('http://localhost:3003');
+  url$ = Observable.of('http://localhost:3003/chat');
   private socket$ : any;
   public connected$ : any;
   public messages$ : any;
@@ -18,7 +18,7 @@ export class ChatRoomService{
       
     this.messages$ = this.socket$
         .switchMap(socket => Observable.fromEvent(socket, 'chat message'))
-        // .do((ev)=>console.log('Got Msg:',  ev) )
+        .do((ev)=>console.log('Got Msg:',  ev) )
         .startWith([])
         .scan((acc, curr)=> [...acc, curr]);
     
@@ -40,5 +40,7 @@ export class ChatRoomService{
       // console.log('Emitting msg: ', message);
       socket.emit('chat message', message);
     })
+
+
   }
 }
