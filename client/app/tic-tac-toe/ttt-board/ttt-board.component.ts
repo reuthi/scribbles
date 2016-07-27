@@ -12,7 +12,7 @@ import { TttService, CellModel } from '../ttt-service/ttt.service';
 export class BoardComponent implements OnInit {
     private board;
     private row;
-    private winner:any;
+    private win;
     private draw:any;
     private currentPlayer:boolean = true; //true = x | false = o 
     
@@ -26,15 +26,18 @@ export class BoardComponent implements OnInit {
     }
 
     play(cell) {
+        
         const x = cell.rowNum;
         const y = cell.colNum;
         console.log('cell', cell)
+        
         if(cell.entity !== 'X' || cell.entity !== 'O' ) {
             if(this.currentPlayer) cell.entity = 'X';
             else cell.entity = 'O';
 
-    // this.tttService.checkGame(this.board, cell);
-      this.currentPlayer = !this.currentPlayer;
+        this.win = this.tttService.checkGame(this.board, cell);
+        if(this.win) alert ('game over!')
+        this.currentPlayer = !this.currentPlayer;
     }
         
     }

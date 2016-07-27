@@ -27,26 +27,23 @@ export class CellModel {
     }
 
     public checkGame(board: CellModel[][], cell:CellModel) {
-    //     // const checkForColMatch = 
-    //     const factor = board.length;
-        const checkForColMatch = (board, x) => 
-            (board[cell.rowNum][0].entity === board[cell.rowNum][1].entity) && 
-            (board[cell.rowNum][1].entity === board[cell.rowNum][2].entity) && 
-            board[x][2].entity;
-            
-            console.log(checkForColMatch)
-    //     // const checkForRowMatch = (board, x) => (board[0][x] === board[1][x]) && (board[1][x] === board[2][x]) && board[2][x];
-        
-    // //     const checkForXMatch = (hash) => {
-    // //     const center = hash[1][1];
 
-    // //     if (!center)
-    // //         return false;
+            if (
+                (board[cell.rowNum][0].entity === board[cell.rowNum][1].entity) && 
+                (board[cell.rowNum][1].entity === board[cell.rowNum][2].entity) 
+            ) return true;
 
-    // //     return hash[0][0] === hash[2][2] && hash[2][2] === center || hash[0][2] === hash[2][0] && hash[2][0] === center;
-    // // }
+            else if (
+                (board[0][cell.colNum].entity === board[1][cell.colNum].entity) && 
+                (board[1][cell.colNum].entity === board[2][cell.colNum].entity) 
+            ) return true;
 
-    // //   checkGame(hash:Array<any>): any{
+            // else if (board.every(elm => elm.reduce((a, b) => !a ? a : b) !== null)) {
+            //     console.log('Draw!!!!!!!!!!!!!')
+            //     return true;
+            // } 
+
+            else return false;
     }
 
  }
