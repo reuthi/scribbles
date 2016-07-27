@@ -4,8 +4,8 @@ import {MonsterListComponent} from './monster/monster-list.component';
 import {MonsterComponent} from './monster/monster.component';
 import {MonsterEditComponent} from './monster/monster-edit.component';
 import {ChatRoomComponent} from './chat/chat-room.component';
+import {TicTacToeComponent} from './tic-tac-toe/ttt/ttt.component';
 import {ArenaComponent} from './arena/arena.component';
-import {BoardComponent} from './ticTacToe/board/board.component';
 import { RouterConfig, ROUTER_DIRECTIVES, provideRouter } from '@angular/router';
 
 const routes: RouterConfig = [
@@ -15,10 +15,10 @@ const routes: RouterConfig = [
   { path: 'monster/edit/:id', component: MonsterEditComponent },
   { path: 'monster/:id/:name', component: MonsterComponent },
   { path: 'chat', component: ChatRoomComponent },
+  { path: 'tic-tac-toe', component: TicTacToeComponent },
   { path: 'arena', component: ArenaComponent },
-  { path: 'ticTacToe', component: BoardComponent }
   
-
+  
 ];
 
 export const ROUTER_PROVIDERS = [
