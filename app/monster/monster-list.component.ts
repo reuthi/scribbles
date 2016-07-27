@@ -40,7 +40,9 @@ export class MonsterListComponent implements OnInit {
   private filter = {byName: '', byPower: ''};
   private monsters : MonsterModel[] = [];
 
-  constructor(private toastr : ToastsManager, private monsterService : MonsterService) { }
+  constructor(
+    // private toastr : ToastsManager, 
+    private monsterService : MonsterService) { }
 
   ngOnInit() {
     const prmMonsters = this.monsterService.query();
@@ -58,7 +60,7 @@ export class MonsterListComponent implements OnInit {
     this.monsterService.remove(monsterId)
       .then((monsters : MonsterModel[])=>{
         this.monsters = monsters;
-        this.toastr.success('You are awesome!', 'Success!');
+        // this.toastr.success('You are awesome!', 'Success!');
       });
   }
 }
