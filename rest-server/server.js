@@ -9,7 +9,11 @@ const 	express = require('express'),
 
 const multer  = require('multer')
 const upload = multer({ dest: 'uploads/' })
-	
+
+const Room = require('./roomsGroup/Room.class');
+const RoomsGroup = require('./roomsGroup/index');
+// console.log('RoomsGroup', RoomsGroup);
+
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -41,42 +45,10 @@ function dbConnect() {
 //   credentials: false
 // };
 
-let nspChat = io.of('/chat');
-
-nspChat.on('connection', function(socket){
-//   console.log('a user connected to chat');
-  socket.on('disconnect', function(){
-    console.log('Chat: user disconnected');
-  });
-  socket.on('chat message', function(msg){
-	//   console.log('Got msg: ', msg, ' emitting to all');
-      nspChat.emit('chat message', msg);
-  });    
-});
-
-let roomsCount = 1;
-function getNextRoomNum(){
-	roomsCount++;
-	return roomsCount;
-}
-const rooms = [{id: roomsCount, count:0}];
-function setupAvailableRoom() {
-
-	let room = rooms[(rooms.length-1)];
-	if (room.count >= 2) {
-		console.log('Creating new room');
-		
-		room = {id: getNextRoomNum(), count: 0};
-		rooms.push(room);
-	}
-	else {
-		room.count++;
-		console.log('Found spot in exisitng room');
-	}
-	return room;
-}
-
 let nspTTT  = io.of('/ttt');
+nspTTT.roomsGroup = new RoomsGroup();
+// console.log('roomsGroup', nspTTT.roomsGroup);
+
 nspTTT.count = 0;
 
 nspTTT.on('connection', function (socket) {
@@ -85,8 +57,9 @@ nspTTT.on('connection', function (socket) {
 	nspTTT.count++;
 	console.log('Playing TTT: ' + nspTTT.count);
 
+	// This is a new socket, not assigned to room yet
 	if (!socket.roomId) {
-		let room = setupAvailableRoom();
+		let room = nspTTT.roomsGroup.setupAvailableRoom();
 		socket.roomId = room.id;
 		socket.join(room.id);
 	}
@@ -105,6 +78,60 @@ nspTTT.on('connection', function (socket) {
 	});
 
 });
+
+
+
+
+
+
+
+
+let nspChat = io.of('/chat');
+
+nspChat.on('connection', function(socket){
+//   console.log('a user connected to chat');
+  socket.on('disconnect', function(){
+    console.log('Chat: user disconnected');
+  });
+  socket.on('chat message', function(msg){
+	//   console.log('Got msg: ', msg, ' emitting to all');
+      nspChat.emit('chat message', msg);
+  });    
+});
+
+// let nspTTT  = io.of('/ttt');
+// nspTTT.roomsGroup = new RoomsGroup();
+// // console.log('roomsGroup', nspTTT.roomsGroup);
+
+// nspTTT.count = 0;
+
+// nspTTT.on('connection', function (socket) {
+	
+// 	console.log('TTT: user connected');
+// 	nspTTT.count++;
+// 	console.log('Playing TTT: ' + nspTTT.count);
+
+// 	// This is a new socket, not assigned to room yet
+// 	if (!socket.roomId) {
+// 		let room = nspTTT.roomsGroup.setupAvailableRoom();
+// 		socket.roomId = room.id;
+// 		socket.join(room.id);
+// 	}
+
+// 	// console.log('Playing TTT: ' + nspTTT.count);
+// 	nspTTT.to(socket.roomId).emit('ttt join', 'Someone Joined room '+ socket.roomId);
+
+// 	socket.on('disconnect', function () {
+// 		console.log('TTT: user disconnected');
+// 		nspTTT.count--;
+// 		console.log('Playing TTT: ' + nspTTT.count);
+// 	});
+
+// 	socket.on('chat message', function (msg) {
+// 		nspTTT.to(socket.roomId).emit('chat message', msg);
+// 	});
+
+// });
 
 cl('WebSockets are Ready');
 
