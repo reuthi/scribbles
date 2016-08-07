@@ -1,4 +1,8 @@
-$badass: #bada55;
+@import "./app/tic-tac-toe/ttt-board/ttt-board.component.scss";
+
+$badass: white;
 body { 
   background-color: $badass; 
+  color:red;
 }
+

@@ -1,8 +1,45 @@
-td {
-    border: 1px solid black;
-    padding: 10%;
-    width: 100px;
-    height: 100px;
-    
-}
+@font-face {
+  font-family: 'MyWebFont';
+  src: url("../../public/font/KidZone.ttf"); }
 
+div {
+  display: flex;
+  align-items: center;
+  flex-direction: column; }
+
+h2 {
+  font-family: MyWebFont;
+  font-size: 50px;
+  letter-spacing: 2px; }
+
+h3 {
+  font-family: MyWebFont;
+  font-size: 30px;
+  letter-spacing: 2px; }
+
+td {
+  border: 10px solid white;
+  border-radius: 25px;
+  text-align: center;
+  background-color: #b6b5ca;
+  padding: 6%;
+  margin: 10%;
+  width: 100px;
+  height: 100px; }
+  td:hover {
+    background-color: lightgrey; }
+  td .fa-circle-o {
+    color: lightcoral;
+    font-size: 50px;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: floralwhite;
+    text-shadow: 6px -1px 5px #969696; }
+  td .fa-times {
+    color: lightgreen;
+    font-size: 50px;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: floralwhite;
+    text-shadow: 6px -1px 5px #969696; }
+
+span {
+  color: blue; }

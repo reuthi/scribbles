@@ -11,7 +11,9 @@ const multer  = require('multer')
 const upload = multer({ dest: 'uploads/' })
 
 const Room = require('./roomsGroup/Room.class');
-const RoomsGroup = require('./roomsGroup/index');
+const RoomsMgr = require('./roomsGroup/index');
+// const Board = require('./ttt.service/board.class');
+
 // console.log('RoomsGroup', RoomsGroup);
 
 const app = express();
@@ -21,8 +23,8 @@ app.use(bodyParser.json());
 const http 	= require('http').Server(app);
 const io 	= require('socket.io')(http);
 
-function dbConnect() {
 
+function dbConnect() {
 	return new Promise((resolve, reject) => {
 		// Connection URL
 		var url = 'mongodb://localhost:27017/seed';
@@ -40,74 +42,149 @@ function dbConnect() {
 	});
 }
 
-// var corsOptions = {
-//   origins: 'http://localhost:8080',
-//   credentials: false
-// };
-
-let nspTTT  = io.of('/ttt');
-nspTTT.roomsGroup = new RoomsGroup();
-// console.log('roomsGroup', nspTTT.roomsGroup);
+let nspTTT = io.of('/ttt');
 
 nspTTT.count = 0;
+nspTTT.roomsGroup = new RoomsMgr();
 
-nspTTT.on('connection', function (socket) {
+
+nspTTT.on('connection', function(socket){
 	
-	console.log('TTT: user connected');
-	nspTTT.count++;
-	console.log('Playing TTT: ' + nspTTT.count);
-
-	// This is a new socket, not assigned to room yet
+	// **** This is a new socket, not assigned to room yet
+	console.log('roomID',socket.roomId);
+	
 	if (!socket.roomId) {
+		
+		nspTTT.count++;
+		console.log('Playing TTT: ' + nspTTT.count);
+		
 		let room = nspTTT.roomsGroup.setupAvailableRoom();
+		
 		socket.roomId = room.id;
 		socket.join(room.id);
 	}
 
-	// console.log('Playing TTT: ' + nspTTT.count);
-	nspTTT.to(socket.roomId).emit('ttt join', 'Someone Joined room '+ socket.roomId);
+	let room = 	nspTTT.roomsGroup.getRoomById(socket.roomId);
+	let you = 0;
+	if (nspTTT.count === 2) you = 1;
 
-	socket.on('disconnect', function () {
-		console.log('TTT: user disconnected');
+	const stateToSend = Object.assign({}, room.state, {you})
+	console.log('this is you: ', stateToSend.you);
+
+	socket.emit('ttt join', stateToSend );
+	
+	socket.on('disconnect', function(){
 		nspTTT.count--;
-		console.log('Playing TTT: ' + nspTTT.count);
+		console.log('TTT: user disconnected')
 	});
 
-	socket.on('chat message', function (msg) {
-		//**on a chatmsg event, the namespace emits the response only
-		// to the specified room (socket.roomId - an arbitrary property we invented)
-		nspTTT.to(socket.roomId).emit('chat message', msg);
-	});
 
-	socket.on('move', (cell) => {
-		if(cell.entity !== 'X' || cell.entity !== 'O' ) {
-		if(this.currentPlayer) cell.entity = 'X';
-		else cell.entity = 'O';
+  	socket.on('ttt move', function (cell) { 
+		let room = 	nspTTT.roomsGroup.getRoomById(socket.roomId);
+
+		// ***if the cell is empty:
+		if(room.state.board.board[cell.rowNum][cell.colNum].entity === "") {
+
+			// ***player 0 is the curr player - updating the cell
+			if (room.state.players[0].currTurnPlayer) cell.entity = room.state.players[0].playerCellEntity; 
+			
+			// ***player 1 is the curr player - updating the cell :			
+			else cell.entity = room.state.players[1].playerCellEntity;
+		
+
+			room.state.board.board[cell.rowNum][cell.colNum] = cell;
 		}
+
+		if (room.state.board.checkGame(room.state.board.board, cell)) {
+			if (room.state.players[0].currTurnPlayer) room.state.players[0].isWin = true;
+			else room.state.players[1].isWin = true;
+		}
+		
+		room.state.players[0].currTurnPlayer = !room.state.players[0].currTurnPlayer;
+		room.state.players[1].currTurnPlayer = !room.state.players[1].currTurnPlayer;  
+		
+		nspTTT.to(socket.roomId).emit('ttt move', room.state);
+		
 		
 	});
 
-});
 
 
-
-
-
-
-
-
-let nspChat = io.of('/chat');
-
-nspChat.on('connection', function(socket){
-//   console.log('a user connected to chat');
-  socket.on('disconnect', function(){
-    console.log('Chat: user disconnected');
-  });
   socket.on('chat message', function(msg){
 	//   console.log('Got msg: ', msg, ' emitting to all');
-      nspChat.emit('chat message', msg);
-  });    
-});
+      		nspTTT.emit('chat message', msg);
+  		});    
+	});
+
+
+
+
+
+// let nspTTT1  = io.of('/ttt');
+// nspTTT.roomsGroup = new RoomsMgr();
+
+// nspTTT.count = 0;
+
+// nspTTT.on('connection', function (socket) {
+
+// 	console.log('TTT: user connected');
+// 	nspTTT.count++;
+// 	console.log('Playing TTT: ' + nspTTT.count);
+
+// 	// **** This is a new socket, not assigned to room yet
+// 	if (!socket.roomId) {
+// 		let room = nspTTT.roomsGroup.setupAvailableRoom();
+// 		socket.roomId = room.id;
+// 		socket.join(room.id);
+// 	}
+
+// 	nspTTT.to(socket.roomId).emit('ttt join', 'Someone Joined room '+ socket.roomId);
+
+// 	socket.on('disconnect', function () {
+// 		console.log('TTT: user disconnected');
+// 		nspTTT.count--;
+// 		console.log('Playing TTT: ' + nspTTT.count);
+// 	});
+
+// 	socket.on('chat message', function (msg) {
+// 		//**** On a chatmsg event, the namespace emits the response only
+// 		// to the specified room (socket.roomId - an arbitrary property we invented)
+// 		nspTTT.to(socket.roomId).emit('chat message', msg);
+// 	});
+
+// 	socket.on('start game', function(){
+// 		let room = 	nspTTT.roomsGroup.getRoomById(socket.roomId);
+// 		nspTTT.to(socket.roomId).emit('start game', room.board.board);		
+// 	})
+
+// 	socket.on('move', (cell) => {
+// 		let room = 	nspTTT.roomsGroup.getRoomById(socket.roomId);
+// 		if(cell.entity !== 'X' || cell.entity !== 'O' ) room.board.board[cell.rowNum][cell.colNum] = cell;
+// 		console.log('cell', room.board.board[cell.rowNum][cell.colNum])
+// 		nspTTT.to(socket.roomId).emit('move', room.board.board);
+
+// 	});
+	
+// });
+
+
+
+
+
+
+
+// let nspChat = io.of('/chat');
+
+// nspChat.on('connection', function(socket){
+// //   console.log('a user connected to chat');
+//   socket.on('disconnect', function(){
+//     console.log('Chat: user disconnected');
+//   });
+//   socket.on('chat message', function(msg){
+// 	//   console.log('Got msg: ', msg, ' emitting to all');
+//       nspChat.emit('chat message', msg);
+//   });    
+// });
 
 // let nspTTT  = io.of('/ttt');
 // nspTTT.roomsGroup = new RoomsGroup();

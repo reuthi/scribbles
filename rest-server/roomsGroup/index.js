@@ -1,6 +1,6 @@
 const Room = require('./Room.class');
 
-class RoomsGroup{
+class RoomsMgr{
 
     constructor(){
         this.roomsCount = 0;
@@ -12,14 +12,14 @@ class RoomsGroup{
         
         let room = this.rooms[(this.rooms.length-1)];
         if (room.playersCount >= 2) {
-            console.log('Creating new room');
             
             room = new Room(this.getNextRoomNum());
+            console.log('Creating new room:', room.id);
             this.rooms.push( room );
         }
         else {
             room.playersCount++;
-            console.log('Found spot in existing room');
+            console.log('Found spot in existing room:', room.id);
         }
         return room;
     }
@@ -29,7 +29,11 @@ class RoomsGroup{
         return this.roomsCount;
     }
 
+    getRoomById(id) {
+        return this.rooms.filter(room => room.id === id)[0];
+    }
+
 
 }
 
-module.exports = RoomsGroup;
+module.exports = RoomsMgr;

@@ -1,8 +1,14 @@
-<h2>board component</h2>
 
-<table>
-    <tr *ngFor="let row of board">
-        <td *ngFor="let cell of row" (click)="play(cell)">{{cell.entity}}</td>
-    </tr>
-</table>
-    
+<div>
+    <h2> TIC TAC TOE </h2>
+    <h3>My Turn? {{isMyTurn}}</h3>
+
+    <table>
+        <tr *ngFor="let row of stateService.board$ | async">
+            <td *ngFor="let cell of row" (click)="play(cell)">
+                <i class="fa {{cell.entity}}" aria-hidden="true"></i>    
+            </td>
+        </tr>
+    </table>
+</div>
+

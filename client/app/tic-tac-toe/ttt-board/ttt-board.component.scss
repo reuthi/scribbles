@@ -1,0 +1,80 @@
+// $size-sm:        90px;
+// $size:           140px;
+// $spacing:        5px;
+
+// $player-1-icon:  "\f00d";
+// $player-2-icon:  "\f10c";
+
+// $player-1-color: #dc685a;
+// $player-2-color: #ecaf4f;
+// $hover-color:    #3d4250;
+
+
+
+// table {
+//     position: absolute;
+//     top: 50%;
+//     left: 50%;
+//     transform: translate(-50%, -50%)
+// }
+@font-face {
+  font-family: 'MyWebFont';
+  src:  url('../../public/font/Snickles.ttf');
+}
+
+div {
+    display: flex;
+    align-items: center;
+    // justify-content: space-around;
+    flex-direction: column
+
+}
+h2 {
+    font-family: MyWebFont;
+    font-size: 50px;
+    letter-spacing: 2px;
+}
+
+h3 {
+    font-family: MyWebFont;
+    font-size: 30px;
+    letter-spacing: 2px;
+}
+td {
+    border: 10px solid white;
+    border-radius: 25px;
+    text-align: center;   
+    background-color:  #b6b5ca;
+    padding: 6%;
+    margin: 10%;
+    width: 100px;
+    height: 100px;
+
+    &:hover {
+        background-color: lightgrey;        
+    }
+    
+    .fa-circle-o {
+        color: lightcoral;
+        font-size: 50px;
+        //  font-weight: bold;
+        -webkit-text-stroke-width: 1px;
+        -webkit-text-stroke-color: floralwhite;
+        text-shadow: 6px -1px 5px rgba(150, 150, 150, 1);
+    }
+    .fa-times {
+        color: lightgreen;
+        font-size: 50px;
+        -webkit-text-stroke-width: 1px;
+        -webkit-text-stroke-color: floralwhite;
+        text-shadow: 6px -1px 5px rgba(150, 150, 150, 1);
+        
+                
+    }
+}
+
+span {
+    color:blue;
+}
+
+

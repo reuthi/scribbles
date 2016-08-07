@@ -13,6 +13,8 @@ export class ChatRoomService{
   public send$ = new Subject();
 
   constructor(@Inject('io') io){
+    console.log('ChatRoomService ctor');
+    
     this.socket$ = this.url$
       .switchMap(url => Observable.of(io(url)));  
       

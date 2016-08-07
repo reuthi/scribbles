@@ -4,8 +4,9 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
 
 import {MonsterService} from './monster/monster.service';
-import {ChatRoomService} from './chat/chat-room.service';
-import {ArenaService} from './arena/arena.service';
+import {StateService} from './tic-tac-toe/state-service/state.service';
+// import {ChatRoomService} from './chat/chat-room.service';
+// import {ArenaService} from './arena/arena.service';
 
 
 import * as io from 'socket.io-client';
@@ -19,8 +20,10 @@ import * as io from 'socket.io-client';
   encapsulation: ViewEncapsulation.None,
 
 
-  providers: [MonsterService, ChatRoomService, ArenaService, ToastsManager, {provide: 'io', useValue: io}]
+  providers: [MonsterService, StateService,  ToastsManager, {provide: 'io', useValue: io}]
 
 
 })
 export class AppComponent { }
+
+// ChatRoomService, ArenaService,
